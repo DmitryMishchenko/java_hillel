@@ -1,10 +1,14 @@
 package l1_intro;
 
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.function.BiFunction;
 
 public class Calculator {
-  Scanner scanner;
+  private Scanner scanner;
+  private Map<String, BiFunction<Double, Double, Double>> operations;
 
   public static void main(String[] args) {
     Calculator calculator = new Calculator();
@@ -14,6 +18,7 @@ public class Calculator {
   }
 
   public void run(Scanner scanner) {
+    this.initOperationsMap();
     this.scanner = scanner;
 
     double firstNumber = getNumberFromUser("Please input first number: ");
@@ -21,22 +26,40 @@ public class Calculator {
     System.out.print(firstNumber);
     System.out.println(" as a first number.");
     double secondNumber = getNumberFromUser("Please input second number: ");
-
     System.out.print("Your input ");
     System.out.print(secondNumber);
     System.out.println(" as a second number.\n");
 
-    double sum = firstNumber + secondNumber;
-    System.out.println("Sum is " + sum);
-    double diff = firstNumber - secondNumber;
-    System.out.println("Difference is " + diff);
-    double mult = firstNumber * secondNumber;
-    System.out.println("Multiplication is " + mult);
-    double div = firstNumber / secondNumber;
-    System.out.println("Division is " + div);
+    String operation = getMathOperationFromUser("Please specify math operation that you wanna perform", "Valid operations are +, -, /, *, %");
+    System.out.println(operation);
+
+    Double result = operations.get(operation).apply(firstNumber, secondNumber);
+    System.out.println(firstNumber + operation + secondNumber + " = " + result);
 
     this.scanner.close();
     System.exit(0);
+  }
+
+  private void initOperationsMap() {
+    Map<String, BiFunction<Double, Double, Double>> operations = new HashMap<>();
+    operations.put("+", Double::sum);
+    operations.put("-", (a, b) -> a - b);
+    operations.put("/", (a, b) -> a / b);
+    operations.put("*", (a, b) -> a / b);
+    operations.put("%", (a, b) -> a % b);
+    this.operations = operations;
+  }
+
+  public String getMathOperationFromUser(String message, String error) {
+    System.out.println(message);
+    while (true) {
+      String userInput = this.scanner.next();
+      if (this.operations.containsKey(userInput)) {
+        return userInput;
+      } else {
+        System.out.println(ConsoleColors.RED + error + ConsoleColors.RESET);
+      }
+    }
   }
 
   public double getNumberFromUser(String message) {
