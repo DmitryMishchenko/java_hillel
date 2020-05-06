@@ -17,7 +17,7 @@ public class Homework {
     drawSquare(20, 15);
 
 //  * Конверт (рекомендую сначала нарисовать одну диагональ, а потом вторую)
-    drawEnvelop(7);
+    drawEnvelop(20, 30);
 //  * в шахматном порядке
     drawChessBoard(10, 10);
 //    5. Ввести число, определить четное или нет.
@@ -64,11 +64,11 @@ public class Homework {
     }
   }
 
-  public static void drawEnvelop(int size) {
-    for (int hIndex = 0; hIndex < size; hIndex++) {
+  public static void drawEnvelop(int width, int height) {
+    for (int hIndex = 0; hIndex < height; hIndex++) {
       StringBuilder sBuilder = new StringBuilder();
-      for (int wIndex = 0; wIndex < size; wIndex++) {
-        char c = (wIndex == 0 || wIndex == size - 1 || hIndex == 0 || hIndex == size - 1 || wIndex == hIndex || wIndex == size - hIndex - 1) ? '*' : ' ';
+      for (int wIndex = 0; wIndex < width; wIndex++) {
+        char c = (wIndex == 0 || wIndex == width - 1 || hIndex == 0 || hIndex == height - 1 || wIndex == hIndex || hIndex == width - wIndex - 1) ? '*' : ' ';
         sBuilder.append(c);
       }
       System.out.println(sBuilder.toString());
