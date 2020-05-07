@@ -71,8 +71,8 @@ public class Homework {
       StringBuilder sBuilder = new StringBuilder();
       for (int wIndex = 1; wIndex <= width; wIndex++) {
         boolean isSide = wIndex == 1 || wIndex == width || hIndex == 1 || hIndex == height;
-        boolean drawLeftLine = Math.abs((hIndex) *  width / height - (wIndex)) == 0;
-        boolean drawRightLine = Math.abs((hIndex) * width / height - (width - wIndex + 1)) == 0;
+        boolean drawLeftLine = hIndex *  width / height - wIndex == 0;
+        boolean drawRightLine = hIndex * width / height - (width - wIndex + 1) == 0;
 
         char c = (isSide || drawLeftLine || drawRightLine) ? '*' : ' ';
         sBuilder.append(c);
