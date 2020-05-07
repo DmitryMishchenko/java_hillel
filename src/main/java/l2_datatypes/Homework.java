@@ -14,18 +14,20 @@ public class Homework {
     System.out.println(bankDeposit(new BigDecimal(1000), 10, 12));
 
 //    4. Вывести на консоль графику (ширину и высоту задает пользователь) вида:
-    drawSquare(20, 15);
+//    drawSquare(20, 15);
 
 //  * Конверт (рекомендую сначала нарисовать одну диагональ, а потом вторую)
-    drawEnvelop(20, 30);
+    drawEnvelop(10, 10);
+    drawEnvelop(10, 20);
+    drawEnvelop(20, 10);
 //  * в шахматном порядке
-    drawChessBoard(10, 10);
+//    drawChessBoard(10, 10);
 //    5. Ввести число, определить четное или нет.
-    System.out.println(isEven(10));
+//    System.out.println(isEven(10));
 //    6. Ввести число, определить простое ли оно.
-    System.out.println(isPrime(101));
+//    System.out.println(isPrime(101));
 //    7. Ввести число, определить каким числам оно кратно.
-    System.out.println(findAllNumberDivisors(100));
+//    System.out.println(findAllNumberDivisors(100));
   }
 
   public static Map<Integer, BigDecimal> bankDeposit(BigDecimal amount, double percent, int years) {
@@ -64,11 +66,15 @@ public class Homework {
     }
   }
 
-  public static void drawEnvelop(int width, int height) {
-    for (int hIndex = 0; hIndex < height; hIndex++) {
+  public static void drawEnvelop(int height, int width) {
+    for (int hIndex = 1; hIndex <= height; hIndex++) {
       StringBuilder sBuilder = new StringBuilder();
-      for (int wIndex = 0; wIndex < width; wIndex++) {
-        char c = (wIndex == 0 || wIndex == width - 1 || hIndex == 0 || hIndex == height - 1 || wIndex == hIndex || hIndex == width - wIndex - 1) ? '*' : ' ';
+      for (int wIndex = 1; wIndex <= width; wIndex++) {
+        boolean isSide = wIndex == 1 || wIndex == width || hIndex == 1 || hIndex == height;
+        boolean drawLeftLine = Math.abs((hIndex) *  width / height - (wIndex)) == 0;
+        boolean drawRightLine = Math.abs((hIndex) * width / height - (width - wIndex + 1)) == 0;
+
+        char c = (isSide || drawLeftLine || drawRightLine) ? '*' : ' ';
         sBuilder.append(c);
       }
       System.out.println(sBuilder.toString());
