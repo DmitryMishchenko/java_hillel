@@ -38,7 +38,20 @@ public class ArrList<T> implements List<T> {
 
   @Override
   public Iterator iterator() {
-    return null;
+    return new Iterator() {
+
+      private int index = 0;
+
+      @Override
+      public boolean hasNext() {
+        return index < size;
+      }
+
+      @Override
+      public Object next() {
+        return data[index++];
+      }
+    };
   }
 
   @Override
@@ -170,18 +183,20 @@ public class ArrList<T> implements List<T> {
 
   @Override
   public ListIterator<T> listIterator() {
-    return null;
+    return listItr(0);
   }
 
   @Override
-  public ListIterator listIterator(int index) {
-    return null;
+  public ListIterator<T> listIterator(int index) {
+    if (index >= size) {
+      throw  new IndexOutOfBoundsException();
+    }
+    return listItr(index);
   }
 
-  @Override
-  public List subList(int fromIndex, int toIndex) {
+  public List subList(int fromIndex, int toIndex) throws IndexOutOfBoundsException {
     if (!isSubListValidBoundaries(fromIndex, toIndex)) {
-      return null;
+      throw new IndexOutOfBoundsException("index out of bounds");
     }
 
     Object[] subListArr = new Object[toIndex - fromIndex];
@@ -193,13 +208,25 @@ public class ArrList<T> implements List<T> {
     return new ArrList<>(subListArr);
   }
 
-  private boolean isSubListValidBoundaries(int fromIndex, int toIndex) {
-    return fromIndex >= 0 && fromIndex < size && fromIndex < toIndex && toIndex < size;
-  }
-
   @Override
   public boolean retainAll(Collection c) {
-    return false;
+    final Object[] data = this.data;
+    int left = 0;
+    boolean modified = false;
+    try {
+      for (int i = 0; i < size; i++)
+        if (c.contains(data[i]))
+          data[left++] = data[i];
+    } finally {
+      if (left != size) {
+        // clear unused data
+        for (int i = left; i < size; i++)
+          data[i] = null;
+        size = left;
+        modified = true;
+      }
+    }
+    return modified;
   }
 
   @Override
@@ -223,6 +250,10 @@ public class ArrList<T> implements List<T> {
     return Arrays.copyOf(data, size);
   }
 
+  private boolean isSubListValidBoundaries(int fromIndex, int toIndex) {
+    return fromIndex >= 0 && fromIndex < size && fromIndex < toIndex && toIndex < size;
+  }
+
   private void ensureCapacity(int requiredSpace) {
     if (size + requiredSpace >= capacity) {
       grow();
@@ -238,6 +269,69 @@ public class ArrList<T> implements List<T> {
     Object[] newData = new Object[capacity];
     System.arraycopy(data, 0, newData, 0, data.length);
     data = newData;
+  }
+
+  private ListIterator<T> listItr(int i) {
+    return new ListIterator<T>() {
+      int index = i;
+      int lastReturned = -1;
+
+      @Override
+      public boolean hasNext() {
+        return index < size;
+      }
+
+      @Override
+      public T next() {
+        lastReturned = index;
+        return data(index++);
+      }
+
+      @Override
+      public boolean hasPrevious() {
+        return index > 0;
+      }
+
+      @Override
+      public T previous() {
+        if (lastReturned == -1) {
+          throw new NoSuchElementException();
+        }
+        return data(lastReturned);
+      }
+
+      @Override
+      public int nextIndex() {
+        return index + 1;
+      }
+
+      @Override
+      public int previousIndex() {
+        return lastReturned;
+      }
+
+      @Override
+      public void remove() {
+        if (lastReturned < 0) {
+          throw new IllegalStateException();
+        }
+        ArrList.this.remove(lastReturned);
+      }
+
+      @Override
+      public void set(T t) {
+        if (lastReturned < 0) {
+          throw new IllegalStateException();
+        }
+        ArrList.this.set(lastReturned, t);
+      }
+
+      @Override
+      public void add(T t) {
+        ensureCapacity(1);
+        ArrList.this.add(index++, t);
+      }
+    };
   }
 
   T data(int index) {
