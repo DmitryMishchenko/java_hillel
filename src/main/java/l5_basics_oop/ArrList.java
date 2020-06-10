@@ -163,7 +163,7 @@ public class ArrList<T> implements List<T> {
   @Override
   public int indexOf(Object o) {
     for (int i = 0; i < size; i++) {
-      if (data[i] == o) {
+      if (o.equals(data[i])) {
         return i;
       }
     }
