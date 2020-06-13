@@ -1,37 +1,24 @@
 package l9_collection;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class Main {
     public static void main(String[] args) {
 
-        MyVector vector = new MyVector();
+        Fibonacci f = new Fibonacci();
 
-        //add and toString
-        System.out.println(vector);
-        vector.add("hello");
-        vector.add("czesc");
-        System.out.println(vector);
+//        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+        long now = System.currentTimeMillis();
 
-        //isEmpty
-        System.out.println(vector.isEmpty());
-        System.out.println(new MyVector().isEmpty());
+        System.out.println(f.naiveRecursive(35));
 
-        //addAll
-        ArrayList a = new ArrayList();
-        a.add(1);
-        a.add(2);
+        System.out.println(f.recursiveWithMemoization(350));
+        System.out.println(f.dpArray(3500));
+        System.out.println(f.dpOptimized(35000));
 
-        vector.addAll(a);
-
-
-        System.out.println(vector.size());
-        vector.add(a);
-        System.out.println(vector.size());
-
-        System.out.println(vector);
-
-
-
+//        System.out.println((System.currentTimeMillis() - now));
+//        System.out.println((System.currentTimeMillis() - now));
     }
 }
