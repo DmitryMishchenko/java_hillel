@@ -194,6 +194,10 @@ public class ArrList<T> implements List<T> {
     return listItr(index);
   }
 
+  public void sort(Comparator<? super T> c) {
+    Arrays.sort((T[]) data, 0, size, c);
+  }
+
   public List subList(int fromIndex, int toIndex) throws IndexOutOfBoundsException {
     if (!isSubListValidBoundaries(fromIndex, toIndex)) {
       throw new IndexOutOfBoundsException("index out of bounds");
@@ -297,12 +301,13 @@ public class ArrList<T> implements List<T> {
         if (lastReturned == -1) {
           throw new NoSuchElementException();
         }
-        return data(lastReturned);
+        lastReturned = --index;
+        return data(index);
       }
 
       @Override
       public int nextIndex() {
-        return index + 1;
+        return index;
       }
 
       @Override
