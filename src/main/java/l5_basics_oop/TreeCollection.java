@@ -154,6 +154,7 @@ public class TreeCollection implements Set {
       Object o = it.next();
       if (!c.contains(o)) {
         remove(o);
+
         modified = true;
       }
     }
