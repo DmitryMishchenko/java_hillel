@@ -1,6 +1,5 @@
 package l5_basics_oop;
 
-import l5_basics_oop.TreeCollection;
 import org.junit.Assert;
 import org.junit.Test;
 

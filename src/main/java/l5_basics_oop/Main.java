@@ -1,8 +1,8 @@
 package l5_basics_oop;
 
-import org.codehaus.groovy.runtime.dgmimpl.arrays.ArrayMetaMethod;
-
 import java.util.*;
+
+
 
 public class Main {
   public static void main(String[] args) {
@@ -58,19 +58,40 @@ public class Main {
 //      System.out.println(n);
 //    }
 
-    Set tree = new TreeCollection();
+//    Set tree = new TreeCollection();
+//
+//    tree.add(10);
+//    tree.add(5);
+//    tree.add(15);
+//
+//    tree.remove(10);
+//
+//    System.out.println(tree.contains(5));
+//    System.out.println(tree.contains(10));
+//
+//    for (Object o : tree) {
+//      System.out.println(o);
+//    }
 
-    tree.add(10);
-    tree.add(5);
-    tree.add(15);
+    Map<String, Integer> map = new MyMap<String, Integer>();
 
-    tree.remove(10);
+    map.put("one", 10);
+    map.put("two", 20);
+    map.put("three", 30);
 
-    System.out.println(tree.contains(5));
-    System.out.println(tree.contains(10));
+    System.out.println(map.get("one"));
+    System.out.println(map.containsKey("two"));
+    System.out.println(map.containsValue(11));
 
-    for (Object o : tree) {
-      System.out.println(o);
-    }
+
+    map.remove("three");
+
+    System.out.println(map.containsValue(30));
+
+//    System.out.println(map.size());
+//
+//    for (int n : map.values()) {
+//      System.out.println(n);
+//    }
   }
 }
