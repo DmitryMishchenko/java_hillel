@@ -5,11 +5,11 @@ import java.util.*;
 public class MyMap<K, V> implements Map<K, V> {
   public static final int MAX_SIZE = 1000;
 
-  private Entry<K, V>[] entries;
+  private LinkedList<Entry<K, V>>[] entries;
   private int size = 0;
 
   public MyMap() {
-    this.entries = new MyEntry[MAX_SIZE];
+    this.entries = new LinkedList[MAX_SIZE];
   }
 
   @Override
@@ -29,9 +29,13 @@ public class MyMap<K, V> implements Map<K, V> {
 
   @Override
   public boolean containsValue(Object value) {
-    for (Entry<K, V> entry : entries) {
-      if (entry != null && value.equals(entry.getValue())) {
-        return true;
+    for (LinkedList<Entry<K, V>> list : entries) {
+      if (list != null) {
+        for (Entry<K, V> entry : list) {
+          if (value.equals(entry.getValue())) {
+            return true;
+          }
+        }
       }
     }
 
@@ -40,8 +44,16 @@ public class MyMap<K, V> implements Map<K, V> {
 
   @Override
   public V get(Object key) {
-    Entry<K, V> entry = entries[hash(key)];
-    return entry == null ? null : entry.getValue();
+    LinkedList<Entry<K, V>> list = entries[hash(key)];
+
+    if (list == null) return null;
+    for (Entry<K, V> entry : list) {
+      if (entry.getKey() == key) {
+        return entry.getValue();
+      }
+    }
+
+    return null;
   }
 
   @Override
@@ -49,10 +61,11 @@ public class MyMap<K, V> implements Map<K, V> {
     int hash = hash(key);
 
     if (entries[hash] == null) {
+      entries[hash] = new LinkedList<>();
       size++;
     }
 
-    entries[hash] = new MyEntry<K, V>(key, value);
+    entries[hash].add(new MyEntry<K, V>(key, value));
 
     return value;
   }
@@ -60,13 +73,24 @@ public class MyMap<K, V> implements Map<K, V> {
   @Override
   public V remove(Object key) {
     int hash = hash(key);
+    LinkedList<Entry<K, V>> list = entries[hash];
 
-    if (entries[hash] != null) {
-      Entry<K, V> entry = entries[hash];
-      entries[hash] = null;
-      size--;
+    if (list != null) {
+      Entry<K, V> removed = null;
+      for (Entry<K, V> entry: list) {
+        if (entry.getKey() == key) {
+          list.remove(entry);
+          removed = entry;
+          size--;
+          break;
+        }
+      }
 
-      return entry.getValue();
+      if (list.isEmpty()) {
+        entries[hash] = null;
+      }
+
+      return removed == null ? null : removed.getValue();
     }
 
     return null;
@@ -83,16 +107,22 @@ public class MyMap<K, V> implements Map<K, V> {
   @Override
   public void clear() {
     size = 0;
-    this.entries = new Entry[MAX_SIZE];
+    this.entries = new LinkedList[MAX_SIZE];
   }
 
   @Override
   public Set<K> keySet() {
     Set<K> set = new HashSet<>();
 
-    for (Entry<K, V> entry : entries) {
-      if (entry != null) {
-        set.add(entry.getKey());
+    for (LinkedList<Entry<K, V>> list: entries) {
+      if (list == null) {
+        continue;
+      }
+
+      for (Entry<K, V> entry : list) {
+        if (entry != null) {
+          set.add(entry.getKey());
+        }
       }
     }
 
@@ -101,24 +131,36 @@ public class MyMap<K, V> implements Map<K, V> {
 
   @Override
   public Collection<V> values() {
-    Collection<V> list = new LinkedList<>();
+    Collection<V> listCollection = new LinkedList<>();
 
-    for (Entry<K, V> entry : entries) {
-      if (entry != null) {
-        list.add(entry.getValue());
+    for (LinkedList<Entry<K, V>> list: entries) {
+      if (list == null) {
+        continue;
+      }
+
+      for (Entry<K, V> entry : list) {
+        if (entry != null) {
+          listCollection.add(entry.getValue());
+        }
       }
     }
 
-    return list;
+    return listCollection;
   }
 
   @Override
   public Set<Entry<K, V>> entrySet() {
     Set<Entry<K, V>> set = new HashSet<>();
 
-    for (Entry<K, V> entry : entries) {
-      if (entry != null) {
-        set.add(entry);
+    for (LinkedList<Entry<K, V>> list: entries) {
+      if (list == null) {
+        continue;
+      }
+
+      for (Entry<K, V> entry : list) {
+        if (entry != null) {
+          set.add(entry);
+        }
       }
     }
 
