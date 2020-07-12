@@ -142,4 +142,52 @@ public class MyMapTest {
 
     Assert.assertEquals(set.size(), 2);
   }
+
+  // nullable tests
+  @Test
+  public void testAddNull() {
+    Map<String, Integer> map = new MyMap<>();
+
+    try {
+      map.put(null, null);
+    } catch (NullPointerException exception) {
+      Assert.assertTrue(exception instanceof NullPointerException);
+    }
+  }
+
+  @Test
+  public void testContainsKeyNull() {
+    Map<String, Integer> map = new MyMap<>();
+
+    Assert.assertFalse(map.containsKey(null));
+  }
+
+  @Test
+  public void testContainsValueNull() {
+    Map<String, Integer> map = new MyMap<>();
+
+    map.put("key1", null);
+
+    Assert.assertTrue(map.containsValue(null));
+    Assert.assertTrue(map.containsKey("key1"));
+  }
+
+  @Test
+  public void testGetNull() {
+    Map<String, Integer> map = new MyMap<>();
+
+    map.put("key1", null);
+
+    Assert.assertNull(map.get(null));
+  }
+
+  @Test
+  public void testRemoveNull() {
+    Map<String, Integer> map = new MyMap<>();
+
+    map.put("key1", null);
+
+    map.remove(null);
+    Assert.assertNull(map.remove(null));
+  }
 }

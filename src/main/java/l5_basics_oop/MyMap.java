@@ -24,7 +24,7 @@ public class MyMap<K, V> implements Map<K, V> {
 
   @Override
   public boolean containsKey(Object key) {
-    return entries[hash(key)] != null;
+    return key != null && entries[hash(key)] != null;
   }
 
   @Override
@@ -32,7 +32,8 @@ public class MyMap<K, V> implements Map<K, V> {
     for (LinkedList<Entry<K, V>> list : entries) {
       if (list != null) {
         for (Entry<K, V> entry : list) {
-          if (value.equals(entry.getValue())) {
+          V entryVal = entry.getValue();
+          if (value == null ? value == entryVal : value.equals(entry.getValue())) {
             return true;
           }
         }
@@ -44,6 +45,7 @@ public class MyMap<K, V> implements Map<K, V> {
 
   @Override
   public V get(Object key) {
+    if (key == null) return null;
     LinkedList<Entry<K, V>> list = entries[hash(key)];
 
     if (list == null) return null;
@@ -58,6 +60,10 @@ public class MyMap<K, V> implements Map<K, V> {
 
   @Override
   public V put(K key, V value) {
+    if (key == null) {
+      throw new NullPointerException("key should not be null");
+    }
+
     int hash = hash(key);
 
     if (entries[hash] == null) {
@@ -72,6 +78,7 @@ public class MyMap<K, V> implements Map<K, V> {
 
   @Override
   public V remove(Object key) {
+    if (key == null) return null;
     int hash = hash(key);
     LinkedList<Entry<K, V>> list = entries[hash];
 
